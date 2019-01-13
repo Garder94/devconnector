@@ -70,8 +70,11 @@ class Navbar extends Component {
       <div>
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
           <div className="container">
-            <Link className="navbar-brand" to="/appointments">
+            <Link className="navbar-brand" to="/main">
               Makerspace
+            </Link>
+            <Link className="navbar-brand" to="/appointments">
+              Booking
             </Link>
             <button
               className="navbar-toggler"

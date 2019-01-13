@@ -29,6 +29,7 @@ import Posts from "./components/posts/Posts";
 import Post from "./components/post/Post";
 import Projects from "./components/projects/Projects";
 import Appointments from "./components/appointments/Appointments";
+import Main from "./components/main/Main";
 
 //Check for token
 if (localStorage.jwtToken) {
@@ -64,7 +65,7 @@ class App extends Component {
               <Route exact path="/login" component={Login} />
               <Route exact path="/appointments" component={Appointments} />
               <Route exact path="/profiles" component={Profiles} />
-
+              <Route exact path="/main" component={Main} />
               <Route exact path="/profile/:handle" component={Profile} />
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />

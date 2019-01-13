@@ -6,10 +6,9 @@ import {
   deleteAppointment
 } from "../../actions/appointmentActions";
 import AppointmentForm from "./AppointmentForm";
-import Spinner from "../common/Spinner";
-import AppointmentFeed from "./AppointmentFeed";
-import axios from "axios";
+
 import BigCalendar from "react-big-calendar";
+
 import moment from "moment";
 import "moment/locale/nb";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -32,29 +31,26 @@ class Appointments extends Component {
   }
 
   componentDidMount() {
-    let self = this;
-    axios
-      .get("/api/appointments")
-      .then(res => {
-        let appointments = res.data;
+    this.props.getAppointments();
+  }
 
-        for (let i = 0; i < appointments.length; i++) {
-          appointments[i].start = moment(
-            appointments[i].slot_date + " " + appointments[i].slot_time_from
-          ).toDate();
-          appointments[i].end = moment(
-            appointments[i].slot_date + " " + appointments[i].slot_time_to
-          ).toDate();
-          appointments[i].title = appointments[i].name;
-          appointments[i].id = appointments[i]._id;
-        }
-        self.setState({
-          cal_events: appointments
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  componentWillReceiveProps(nextProps) {
+    let self = this;
+    let appointments = nextProps.appointment.appointments;
+
+    for (let i = 0; i < appointments.length; i++) {
+      appointments[i].start = moment(
+        appointments[i].slot_date + " " + appointments[i].slot_time_from
+      ).toDate();
+      appointments[i].end = moment(
+        appointments[i].slot_date + " " + appointments[i].slot_time_to
+      ).toDate();
+      appointments[i].title = appointments[i].name;
+      appointments[i].id = appointments[i]._id;
+    }
+    self.setState({
+      cal_events: appointments
+    });
   }
 
   onSelectEvent(pEvent) {
@@ -62,7 +58,7 @@ class Appointments extends Component {
     const r = window.confirm("Would you like to remove this event?");
     if (r === true && auth.user.id === pEvent.user) {
       this.props.deleteAppointment(pEvent._id);
-      window.location.reload();
+
       alert("Du har nå slettet din booking");
     } else {
       alert("Du kan ikke slette andre sin booking!!");
@@ -73,14 +69,7 @@ class Appointments extends Component {
     const { cal_events } = this.state;
 
     const localizer = BigCalendar.momentLocalizer(moment);
-    const { appointments, loading } = this.props.appointment;
-    let appointmentContent;
 
-    if (appointments === null || loading) {
-      appointmentContent = <Spinner />;
-    } else {
-      appointmentContent = <AppointmentFeed appointments={appointments} />;
-    }
     return (
       <div className="appointments">
         <div className="container">
